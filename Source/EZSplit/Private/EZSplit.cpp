@@ -175,7 +175,12 @@ void SplitMesh(AActor* Actor)
         Vertices.Add(FVector(VertexBuffer.VertexPosition(i)));
         Normals.Add(FVector(LODResource.VertexBuffers.StaticMeshVertexBuffer.VertexTangentZ(i)));
         Tangents.Add(FVector(LODResource.VertexBuffers.StaticMeshVertexBuffer.VertexTangentX(i)));
-        Colors.Add(LODResource.VertexBuffers.ColorVertexBuffer.VertexColor(i));
+
+        if (LODResource.VertexBuffers.ColorVertexBuffer.GetNumVertices() > 0)
+        {
+            Colors.Add(LODResource.VertexBuffers.ColorVertexBuffer.VertexColor(i));
+        }
+
 
         for (int32 UVChannel = 0; UVChannel < NumUVChannels; ++UVChannel)
         {
@@ -364,7 +369,11 @@ TArray<UStaticMesh*> CreateNewStaticMeshes(
                         ));
                     }
 
-                    Attributes.GetVertexInstanceColors()[VertexInstanceID] = FVector4f(Colors[VertexIndex]);
+                    if (Colors.Num() != 0)
+                    {
+                        Attributes.GetVertexInstanceColors()[VertexInstanceID] = FVector4f(Colors[VertexIndex]);
+                    }
+
                     Attributes.GetVertexInstanceNormals()[VertexInstanceID] = FVector3f(Normals[VertexIndex]);
                     Attributes.GetVertexInstanceTangents()[VertexInstanceID] = FVector3f(Tangents[VertexIndex]);
                 }
